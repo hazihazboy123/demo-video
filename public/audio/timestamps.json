@@ -1,0 +1,498 @@
+{
+  "script": "My wife's parents have been in America for ten years.\n\nThey still don't think I've learned any Chinese.\n\nAnd honestly... they're right. I haven't.\n\nBut they don't need to know that.\n\nThey just texted me... no idea what this says.\n\nOh look, another one. Still no clue.\n\nBut I know exactly what to do.\n\nUnilingual keyboard... paste their message... translate.\n\nOh. That's what they meant. They're landing tomorrow.\n\nNow I just type my response in English... hit translate...\n\nPerfect Mandarin. Sent.\n\nThey're gonna think I've been studying this whole time.\n\nNah. I just got the cheat code.\n\nUnilingual.",
+  "words": [
+    {
+      "word": "My",
+      "start": 0,
+      "end": 0.174
+    },
+    {
+      "word": "wife's",
+      "start": 0.232,
+      "end": 0.476
+    },
+    {
+      "word": "parents",
+      "start": 0.522,
+      "end": 0.882
+    },
+    {
+      "word": "have",
+      "start": 0.906,
+      "end": 1.022
+    },
+    {
+      "word": "been",
+      "start": 1.045,
+      "end": 1.184
+    },
+    {
+      "word": "in",
+      "start": 1.219,
+      "end": 1.265
+    },
+    {
+      "word": "America",
+      "start": 1.312,
+      "end": 1.73
+    },
+    {
+      "word": "for",
+      "start": 1.811,
+      "end": 1.95
+    },
+    {
+      "word": "ten",
+      "start": 2.032,
+      "end": 2.287
+    },
+    {
+      "word": "years.",
+      "start": 2.368,
+      "end": 2.972
+    },
+    {
+      "word": "They",
+      "start": 3.587,
+      "end": 3.75
+    },
+    {
+      "word": "still",
+      "start": 3.785,
+      "end": 3.959
+    },
+    {
+      "word": "don't",
+      "start": 3.994,
+      "end": 4.145
+    },
+    {
+      "word": "think",
+      "start": 4.168,
+      "end": 4.342
+    },
+    {
+      "word": "I've",
+      "start": 4.4,
+      "end": 4.551
+    },
+    {
+      "word": "learned",
+      "start": 4.586,
+      "end": 4.888
+    },
+    {
+      "word": "any",
+      "start": 4.981,
+      "end": 5.155
+    },
+    {
+      "word": "Chinese.",
+      "start": 5.201,
+      "end": 5.677
+    },
+    {
+      "word": "And",
+      "start": 5.7,
+      "end": 5.793
+    },
+    {
+      "word": "honestly...",
+      "start": 5.863,
+      "end": 6.687
+    },
+    {
+      "word": "they're",
+      "start": 7.396,
+      "end": 7.616
+    },
+    {
+      "word": "right.",
+      "start": 7.651,
+      "end": 8.139
+    },
+    {
+      "word": "I",
+      "start": 8.963,
+      "end": 9.044
+    },
+    {
+      "word": "haven't.",
+      "start": 9.16,
+      "end": 9.799
+    },
+    {
+      "word": "But",
+      "start": 10.762,
+      "end": 10.902
+    },
+    {
+      "word": "they",
+      "start": 10.925,
+      "end": 11.029
+    },
+    {
+      "word": "don't",
+      "start": 11.076,
+      "end": 11.238
+    },
+    {
+      "word": "need",
+      "start": 11.262,
+      "end": 11.413
+    },
+    {
+      "word": "to",
+      "start": 11.447,
+      "end": 11.505
+    },
+    {
+      "word": "know",
+      "start": 11.564,
+      "end": 11.703
+    },
+    {
+      "word": "that.",
+      "start": 11.761,
+      "end": 12.179
+    },
+    {
+      "word": "They",
+      "start": 12.887,
+      "end": 13.05
+    },
+    {
+      "word": "just",
+      "start": 13.119,
+      "end": 13.282
+    },
+    {
+      "word": "texted",
+      "start": 13.328,
+      "end": 13.758
+    },
+    {
+      "word": "me...",
+      "start": 13.816,
+      "end": 14.28
+    },
+    {
+      "word": "no",
+      "start": 14.988,
+      "end": 15.186
+    },
+    {
+      "word": "idea",
+      "start": 15.267,
+      "end": 15.639
+    },
+    {
+      "word": "what",
+      "start": 15.708,
+      "end": 15.859
+    },
+    {
+      "word": "this",
+      "start": 15.906,
+      "end": 16.057
+    },
+    {
+      "word": "says.",
+      "start": 16.091,
+      "end": 16.637
+    },
+    {
+      "word": "Oh",
+      "start": 17.461,
+      "end": 17.671
+    },
+    {
+      "word": "look,",
+      "start": 17.717,
+      "end": 17.973
+    },
+    {
+      "word": "another",
+      "start": 17.996,
+      "end": 18.286
+    },
+    {
+      "word": "one.",
+      "start": 18.344,
+      "end": 18.553
+    },
+    {
+      "word": "Still",
+      "start": 18.576,
+      "end": 18.82
+    },
+    {
+      "word": "no",
+      "start": 18.878,
+      "end": 18.971
+    },
+    {
+      "word": "clue.",
+      "start": 19.041,
+      "end": 19.494
+    },
+    {
+      "word": "But",
+      "start": 19.668,
+      "end": 19.819
+    },
+    {
+      "word": "I",
+      "start": 19.865,
+      "end": 19.888
+    },
+    {
+      "word": "know",
+      "start": 19.958,
+      "end": 20.086
+    },
+    {
+      "word": "exactly",
+      "start": 20.155,
+      "end": 20.678
+    },
+    {
+      "word": "what",
+      "start": 20.713,
+      "end": 20.852
+    },
+    {
+      "word": "to",
+      "start": 20.887,
+      "end": 20.945
+    },
+    {
+      "word": "do.",
+      "start": 21.003,
+      "end": 21.444
+    },
+    {
+      "word": "Unilingual",
+      "start": 22.268,
+      "end": 23.011
+    },
+    {
+      "word": "keyboard...",
+      "start": 23.093,
+      "end": 23.847
+    },
+    {
+      "word": "paste",
+      "start": 24.126,
+      "end": 24.463
+    },
+    {
+      "word": "their",
+      "start": 24.497,
+      "end": 24.66
+    },
+    {
+      "word": "message...",
+      "start": 24.718,
+      "end": 25.403
+    },
+    {
+      "word": "translate.",
+      "start": 26.018,
+      "end": 26.889
+    },
+    {
+      "word": "Oh.",
+      "start": 27.597,
+      "end": 27.969
+    },
+    {
+      "word": "That's",
+      "start": 28.12,
+      "end": 28.375
+    },
+    {
+      "word": "what",
+      "start": 28.398,
+      "end": 28.515
+    },
+    {
+      "word": "they",
+      "start": 28.538,
+      "end": 28.642
+    },
+    {
+      "word": "meant.",
+      "start": 28.689,
+      "end": 29.176
+    },
+    {
+      "word": "They're",
+      "start": 29.385,
+      "end": 29.606
+    },
+    {
+      "word": "landing",
+      "start": 29.641,
+      "end": 29.943
+    },
+    {
+      "word": "tomorrow.",
+      "start": 30.012,
+      "end": 30.628
+    },
+    {
+      "word": "Now",
+      "start": 30.953,
+      "end": 31.104
+    },
+    {
+      "word": "I",
+      "start": 31.162,
+      "end": 31.185
+    },
+    {
+      "word": "just",
+      "start": 31.278,
+      "end": 31.429
+    },
+    {
+      "word": "type",
+      "start": 31.463,
+      "end": 31.684
+    },
+    {
+      "word": "my",
+      "start": 31.719,
+      "end": 31.8
+    },
+    {
+      "word": "response",
+      "start": 31.87,
+      "end": 32.311
+    },
+    {
+      "word": "in",
+      "start": 32.346,
+      "end": 32.415
+    },
+    {
+      "word": "English...",
+      "start": 32.508,
+      "end": 33.159
+    },
+    {
+      "word": "hit",
+      "start": 33.542,
+      "end": 33.843
+    },
+    {
+      "word": "translate...",
+      "start": 34.284,
+      "end": 35.155
+    },
+    {
+      "word": "Perfect",
+      "start": 35.48,
+      "end": 36.049
+    },
+    {
+      "word": "Mandarin.",
+      "start": 36.258,
+      "end": 37.106
+    },
+    {
+      "word": "Sent.",
+      "start": 37.814,
+      "end": 38.534
+    },
+    {
+      "word": "They're",
+      "start": 39.242,
+      "end": 39.451
+    },
+    {
+      "word": "gonna",
+      "start": 39.474,
+      "end": 39.625
+    },
+    {
+      "word": "think",
+      "start": 39.671,
+      "end": 39.845
+    },
+    {
+      "word": "I've",
+      "start": 39.904,
+      "end": 40.043
+    },
+    {
+      "word": "been",
+      "start": 40.066,
+      "end": 40.205
+    },
+    {
+      "word": "studying",
+      "start": 40.275,
+      "end": 40.809
+    },
+    {
+      "word": "this",
+      "start": 41.424,
+      "end": 41.657
+    },
+    {
+      "word": "whole",
+      "start": 41.726,
+      "end": 42.063
+    },
+    {
+      "word": "time.",
+      "start": 42.098,
+      "end": 42.585
+    },
+    {
+      "word": "Nah.",
+      "start": 43.201,
+      "end": 43.863
+    },
+    {
+      "word": "I",
+      "start": 44.571,
+      "end": 44.629
+    },
+    {
+      "word": "just",
+      "start": 44.745,
+      "end": 44.884
+    },
+    {
+      "word": "got",
+      "start": 44.919,
+      "end": 45.047
+    },
+    {
+      "word": "the",
+      "start": 45.082,
+      "end": 45.151
+    },
+    {
+      "word": "cheat",
+      "start": 45.221,
+      "end": 45.581
+    },
+    {
+      "word": "code.",
+      "start": 45.662,
+      "end": 46.266
+    },
+    {
+      "word": "Unilingual.",
+      "start": 46.974,
+      "end": 48.205
+    }
+  ],
+  "totalDuration": 48.205,
+  "fps": 30,
+  "totalFrames": 1447
+}
