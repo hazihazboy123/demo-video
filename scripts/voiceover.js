@@ -9,7 +9,7 @@ const client = new ElevenLabsClient({
 
 // The voiceover script - chill, confident, slightly cocky
 // Pauses marked with ... for natural timing with visuals
-const script = `My wife's parents have been in America for ten years.
+const script = `My wife's parents haven't been in America for ten years.
 
 They still don't think I've learned any Chinese.
 

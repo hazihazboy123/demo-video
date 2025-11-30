@@ -9,6 +9,15 @@ interface Message {
   showAt: number;
 }
 
+interface SelectionState {
+  messageId: number | null;
+  showCopyMenu: boolean;
+}
+
+interface PasteMenuState {
+  show: boolean;
+}
+
 interface AppleMessagesProps {
   contactName: string;
   contactInitials?: string;
@@ -22,6 +31,11 @@ interface AppleMessagesProps {
   selectedLanguage?: { name: string; flag: string };
   highlightedButton?: 'contacts' | 'transliterate' | 'language' | 'translate' | null;
   isTranslating?: boolean;
+  // Copy/paste props
+  selectedMessageId?: number | null;
+  showCopyMenu?: boolean;
+  showPasteMenu?: boolean;
+  inputFocused?: boolean;
 }
 
 // Scale factor - tuned for 1080x1920 canvas to match real iOS
@@ -245,20 +259,46 @@ const TypingIndicator: React.FC = () => {
 };
 
 // Message bubble
-const MessageBubble: React.FC<{ message: Message; isFirst?: boolean; isLast?: boolean; showDelivered?: boolean }> = ({
+const MessageBubble: React.FC<{
+  message: Message;
+  isFirst?: boolean;
+  isLast?: boolean;
+  showDelivered?: boolean;
+  isSelected?: boolean;
+  showCopyMenu?: boolean;
+}> = ({
   message,
   isFirst = true,
   isLast = true,
-  showDelivered = false
+  showDelivered = false,
+  isSelected = false,
+  showCopyMenu = false,
 }) => {
   const frame = useCurrentFrame();
-  const progress = interpolate(frame - message.showAt, [0, 6], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const { fps } = useVideoConfig();
 
   if (frame < message.showAt) return null;
 
-  const opacity = progress;
-  const scale = interpolate(progress, [0, 1], [0.9, 1]);
-  const translateY = interpolate(progress, [0, 1], [15, 0]);
+  // Spring animation for iMessage-like bounce effect
+  const springProgress = spring({
+    frame: frame - message.showAt,
+    fps,
+    from: 0,
+    to: 1,
+    durationInFrames: 15,
+    config: { damping: 12, stiffness: 200, mass: 0.8 },
+  });
+
+  const opacity = Math.min(springProgress * 2, 1); // Fade in faster
+  const scale = interpolate(springProgress, [0, 1], [0.3, 1]);
+  const translateY = interpolate(springProgress, [0, 1], [30 * S, 0]);
+  // Slide in from the side like iMessage
+  const translateX = message.isMe
+    ? interpolate(springProgress, [0, 1], [50 * S, 0])
+    : interpolate(springProgress, [0, 1], [-50 * S, 0]);
+
+  // When selected, message scales up slightly like iOS
+  const selectedScale = isSelected ? 1.02 : 1;
 
   return (
     <div style={{
@@ -268,14 +308,141 @@ const MessageBubble: React.FC<{ message: Message; isFirst?: boolean; isLast?: bo
       padding: `0 ${20 * S}px`,
       marginTop: isFirst ? 10 * S : 3 * S,
       opacity,
-      transform: `translateY(${translateY}px) scale(${scale})`,
+      transform: `translateY(${translateY}px) translateX(${translateX}px) scale(${scale})`,
+      zIndex: isSelected ? 50 : 1,
+      position: 'relative',
     }}>
       <div style={{
         maxWidth: '75%',
         backgroundColor: message.isMe ? '#007AFF' : '#3A3A3C',
         borderRadius: 22 * S,
         padding: `${10 * S}px ${18 * S}px`,
+        position: 'relative',
+        transform: `scale(${selectedScale})`,
+        transition: 'transform 0.15s ease-out',
+        boxShadow: isSelected ? `0 ${8 * S}px ${24 * S}px rgba(0, 0, 0, 0.4)` : 'none',
       }}>
+        {/* iOS Tapback reactions + Context menu */}
+        {showCopyMenu && (
+          <div style={{
+            position: 'absolute',
+            top: -140 * S,
+            left: message.isMe ? 'auto' : 0,
+            right: message.isMe ? 0 : 'auto',
+            zIndex: 100,
+          }}>
+            {/* Tapback reactions row */}
+            <div style={{
+              backgroundColor: 'rgba(60, 60, 67, 0.95)',
+              backdropFilter: 'blur(40px)',
+              borderRadius: 30 * S,
+              padding: `${8 * S}px ${12 * S}px`,
+              display: 'flex',
+              gap: 4 * S,
+              marginBottom: 8 * S,
+              boxShadow: `0 ${8 * S}px ${32 * S}px rgba(0, 0, 0, 0.4)`,
+            }}>
+              {['❤️', '👍', '👎', '😂', '‼️', '❓'].map((emoji, i) => (
+                <div key={i} style={{
+                  width: 40 * S,
+                  height: 40 * S,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 24 * S,
+                }}>
+                  {emoji}
+                </div>
+              ))}
+            </div>
+
+            {/* Context menu */}
+            <div style={{
+              backgroundColor: 'rgba(60, 60, 67, 0.95)',
+              backdropFilter: 'blur(40px)',
+              borderRadius: 14 * S,
+              overflow: 'hidden',
+              boxShadow: `0 ${8 * S}px ${32 * S}px rgba(0, 0, 0, 0.4)`,
+              minWidth: 200 * S,
+            }}>
+              {/* Reply */}
+              <div style={{
+                padding: `${14 * S}px ${16 * S}px`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottom: '0.5px solid rgba(255, 255, 255, 0.15)',
+              }}>
+                <span style={{
+                  fontSize: 17 * S,
+                  color: '#FFFFFF',
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
+                }}>Reply</span>
+                <svg width={20 * S} height={20 * S} viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.5">
+                  <path d="M9 17l-5-5 5-5M4 12h16" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+
+              {/* Copy - highlighted */}
+              <div style={{
+                padding: `${14 * S}px ${16 * S}px`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottom: '0.5px solid rgba(255, 255, 255, 0.15)',
+                backgroundColor: 'rgba(0, 122, 255, 0.4)',
+              }}>
+                <span style={{
+                  fontSize: 17 * S,
+                  color: '#FFFFFF',
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
+                  fontWeight: 500,
+                }}>Copy</span>
+                <svg width={20 * S} height={20 * S} viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.5">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                </svg>
+              </div>
+
+              {/* Translate */}
+              <div style={{
+                padding: `${14 * S}px ${16 * S}px`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottom: '0.5px solid rgba(255, 255, 255, 0.15)',
+              }}>
+                <span style={{
+                  fontSize: 17 * S,
+                  color: '#FFFFFF',
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
+                }}>Translate</span>
+                <svg width={20 * S} height={20 * S} viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.5">
+                  <path d="M5 8l6 6M4 14l6-6 2 2M2 5h12M7 2v3M22 22l-5-10-5 10M14 18h6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+
+              {/* More */}
+              <div style={{
+                padding: `${14 * S}px ${16 * S}px`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+                <span style={{
+                  fontSize: 17 * S,
+                  color: '#FFFFFF',
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
+                }}>More...</span>
+                <svg width={20 * S} height={20 * S} viewBox="0 0 24 24" fill="#FFFFFF">
+                  <circle cx="12" cy="12" r="1.5"/>
+                  <circle cx="6" cy="12" r="1.5"/>
+                  <circle cx="18" cy="12" r="1.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        )}
         <span style={{
           fontSize: 20 * S,
           lineHeight: 1.3,
@@ -317,7 +484,17 @@ const TimestampDivider: React.FC<{ text: string }> = ({ text }) => (
 );
 
 // Input bar
-const InputBar: React.FC<{ typedText?: string }> = ({ typedText }) => {
+const InputBar: React.FC<{ typedText?: string; isFocused?: boolean; showPasteMenu?: boolean }> = ({
+  typedText,
+  isFocused = false,
+  showPasteMenu = false,
+}) => {
+  const frame = useCurrentFrame();
+
+  // Cursor blink animation when focused but no text
+  const showCursor = isFocused && !typedText;
+  const cursorOpacity = showCursor ? (Math.floor(frame / 15) % 2 === 0 ? 1 : 0) : 0;
+
   return (
     <div style={{
       padding: `${10 * S}px ${14 * S}px`,
@@ -325,6 +502,7 @@ const InputBar: React.FC<{ typedText?: string }> = ({ typedText }) => {
       alignItems: 'center',
       gap: 10 * S,
       backgroundColor: '#000',
+      position: 'relative',
     }}>
       {/* Plus button */}
       <div style={{
@@ -344,20 +522,89 @@ const InputBar: React.FC<{ typedText?: string }> = ({ typedText }) => {
       {/* Text input */}
       <div style={{
         flex: 1,
-        height: 42 * S,
+        minHeight: 42 * S,
         borderRadius: 21 * S,
-        border: `${1.5 * S}px solid #3A3A3C`,
+        border: `${1.5 * S}px solid ${isFocused ? '#007AFF' : '#3A3A3C'}`,
         display: 'flex',
         alignItems: 'center',
-        padding: `0 ${18 * S}px`,
+        padding: `${10 * S}px ${18 * S}px`,
+        position: 'relative',
+        boxShadow: isFocused ? `0 0 ${10 * S}px rgba(0, 122, 255, 0.3)` : 'none',
       }}>
         <span style={{
           fontSize: 20 * S,
           color: typedText ? '#fff' : '#8E8E93',
           fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
+          lineHeight: 1.3,
+          wordBreak: 'break-word',
         }}>
           {typedText || 'iMessage'}
         </span>
+        {/* Blinking cursor */}
+        {showCursor && (
+          <div style={{
+            width: 2 * S,
+            height: 24 * S,
+            backgroundColor: '#007AFF',
+            marginLeft: 2 * S,
+            opacity: cursorOpacity,
+          }} />
+        )}
+
+        {/* iOS Paste callout menu */}
+        {showPasteMenu && (
+          <div style={{
+            position: 'absolute',
+            top: -50 * S,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 100,
+          }}>
+            <div style={{
+              backgroundColor: '#000000',
+              borderRadius: 8 * S,
+              padding: `${8 * S}px ${16 * S}px`,
+              boxShadow: `0 ${2 * S}px ${12 * S}px rgba(0, 0, 0, 0.5)`,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 16 * S,
+            }}>
+              {/* Paste option - highlighted */}
+              <span style={{
+                fontSize: 15 * S,
+                fontWeight: 400,
+                color: '#FFFFFF',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
+                backgroundColor: 'rgba(0, 122, 255, 0.5)',
+                padding: `${4 * S}px ${8 * S}px`,
+                borderRadius: 4 * S,
+              }}>
+                Paste
+              </span>
+              <div style={{ width: 1, height: 20 * S, backgroundColor: 'rgba(255,255,255,0.3)' }} />
+              <span style={{
+                fontSize: 15 * S,
+                fontWeight: 400,
+                color: 'rgba(255,255,255,0.6)',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
+              }}>
+                AutoFill
+              </span>
+            </div>
+            {/* Arrow pointing down */}
+            <div style={{
+              position: 'absolute',
+              left: '50%',
+              bottom: -6 * S,
+              transform: 'translateX(-50%)',
+              width: 0,
+              height: 0,
+              borderLeft: `${8 * S}px solid transparent`,
+              borderRight: `${8 * S}px solid transparent`,
+              borderTop: `${8 * S}px solid #000000`,
+            }} />
+          </div>
+        )}
       </div>
 
       {/* Send button */}
@@ -588,6 +835,10 @@ export const AppleMessages: React.FC<AppleMessagesProps> = ({
   selectedLanguage = { name: 'Chinese', flag: '🇨🇳' },
   highlightedButton = null,
   isTranslating = false,
+  selectedMessageId = null,
+  showCopyMenu = false,
+  showPasteMenu = false,
+  inputFocused = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -609,6 +860,9 @@ export const AppleMessages: React.FC<AppleMessagesProps> = ({
   const visibleMessages = messages.filter(m => frame >= m.showAt);
   const lastVisibleMessage = visibleMessages[visibleMessages.length - 1];
 
+  // Show dim overlay when context menu is visible
+  const showDimOverlay = showCopyMenu && selectedMessageId !== null;
+
   return (
     <div style={{
       width: '100%',
@@ -617,7 +871,21 @@ export const AppleMessages: React.FC<AppleMessagesProps> = ({
       display: 'flex',
       flexDirection: 'column',
       fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
+      position: 'relative',
     }}>
+      {/* Dim overlay for context menu */}
+      {showDimOverlay && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          zIndex: 10,
+          pointerEvents: 'none',
+        }} />
+      )}
       <StatusBar />
       <MessagesHeader contactName={contactName} contactInitials={contactInitials} />
 
@@ -645,13 +913,15 @@ export const AppleMessages: React.FC<AppleMessagesProps> = ({
               isFirst={isFirst}
               isLast={isLast}
               showDelivered={showDelivered}
+              isSelected={selectedMessageId === msg.id}
+              showCopyMenu={showCopyMenu && selectedMessageId === msg.id}
             />
           );
         })}
         {showTyping && <TypingIndicator />}
       </div>
 
-      <InputBar typedText={inputText} />
+      <InputBar typedText={inputText} isFocused={inputFocused} showPasteMenu={showPasteMenu} />
 
       {/* Keyboard Container with switch animation */}
       <div style={{ position: 'relative', overflow: 'hidden' }}>

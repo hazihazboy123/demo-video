@@ -23,10 +23,10 @@ const GOLD = '#FFD700';
 // Scale factor for 1080x1920 canvas
 const S = 2.2;
 
-// Favorite languages (English and Chinese) - these show at top
+// Favorite languages (English and Mandarin) - these show at top
 const FAVORITES: Language[] = [
   { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸', isFavorite: true },
-  { code: 'zh', name: 'Chinese', nativeName: '中文', flag: '🇨🇳', isFavorite: true },
+  { code: 'zh', name: 'Mandarin (Simplified)', nativeName: '简体中文', flag: '🇨🇳', isFavorite: true },
 ];
 
 // Popular languages
