@@ -25,31 +25,39 @@ export const UnilingualKeyboard: React.FC<UnilingualKeyboardProps> = ({
 }) => {
   const frame = useCurrentFrame();
 
-  // Pulsing animation for highlighted buttons
+  // Pulsing animation for highlighted buttons - MUCH STRONGER
   const getPulseGlow = (isHighlighted: boolean) => {
     if (!isHighlighted) return 'none';
-    const intensity = interpolate(Math.sin(frame * 0.15), [-1, 1], [15 * S, 25 * S]);
-    return `0 0 ${intensity}px ${PURPLE}`;
+    const intensity = interpolate(Math.sin(frame * 0.2), [-1, 1], [20 * S, 40 * S]);
+    return `0 0 ${intensity}px ${PURPLE}, 0 0 ${intensity * 1.5}px rgba(139, 92, 246, 0.5)`;
   };
 
-  // Shared button styles
-  const getButtonStyle = (isHighlighted: boolean) => ({
-    backgroundColor: BUTTON_BG,
-    border: `${2 * S}px solid ${PURPLE}`,
-    borderRadius: 18 * S,
-    boxShadow: isHighlighted
-      ? getPulseGlow(true)
-      : `0 ${2 * S}px ${8 * S}px rgba(0, 0, 0, 0.1)`,
-  });
+  // Shared button styles - no scale/press animation, just glow highlight
+  const getButtonStyle = (buttonType: 'contacts' | 'transliterate' | 'language' | 'translate') => {
+    const isHighlighted = highlightedButton === buttonType;
 
-  const getBigButtonStyle = (isHighlighted: boolean) => ({
-    backgroundColor: BUTTON_BG,
-    border: `${2 * S}px solid ${PURPLE}`,
-    borderRadius: 20 * S,
-    boxShadow: isHighlighted
-      ? getPulseGlow(true)
-      : `0 ${4 * S}px ${8 * S}px rgba(0, 0, 0, 0.1)`,
-  });
+    return {
+      backgroundColor: BUTTON_BG,
+      border: `${2 * S}px solid ${PURPLE}`,
+      borderRadius: 18 * S,
+      boxShadow: isHighlighted
+        ? getPulseGlow(true)
+        : `0 ${2 * S}px ${8 * S}px rgba(0, 0, 0, 0.1)`,
+    };
+  };
+
+  const getBigButtonStyle = (buttonType: 'language' | 'translate') => {
+    const isHighlighted = highlightedButton === buttonType;
+
+    return {
+      backgroundColor: BUTTON_BG,
+      border: `${(isHighlighted ? 3 : 2) * S}px solid ${PURPLE}`,
+      borderRadius: 20 * S,
+      boxShadow: isHighlighted
+        ? getPulseGlow(true)
+        : `0 ${4 * S}px ${8 * S}px rgba(0, 0, 0, 0.1)`,
+    };
+  };
 
   return (
     <div
@@ -70,7 +78,7 @@ export const UnilingualKeyboard: React.FC<UnilingualKeyboardProps> = ({
           style={{
             flex: 1,
             height: 44 * S,
-            ...getButtonStyle(highlightedButton === 'transliterate'),
+            ...getButtonStyle('transliterate'),
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -94,7 +102,7 @@ export const UnilingualKeyboard: React.FC<UnilingualKeyboardProps> = ({
           style={{
             flex: 1,
             height: 44 * S,
-            ...getButtonStyle(highlightedButton === 'contacts'),
+            ...getButtonStyle('contacts'),
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -152,7 +160,7 @@ export const UnilingualKeyboard: React.FC<UnilingualKeyboardProps> = ({
           style={{
             flex: 1,
             height: 120 * S,
-            ...getBigButtonStyle(highlightedButton === 'language'),
+            ...getBigButtonStyle('language'),
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -194,7 +202,7 @@ export const UnilingualKeyboard: React.FC<UnilingualKeyboardProps> = ({
           style={{
             flex: 1,
             height: 120 * S,
-            ...getBigButtonStyle(highlightedButton === 'translate'),
+            ...getBigButtonStyle('translate'),
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
